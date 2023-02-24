@@ -1,0 +1,80 @@
+---
+title: "index.Rmd"
+output: 
+  flexdashboard::flex_dashboard:
+    storyboard: true
+date: "2023-02-15"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(spotifyr)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+### Plotting Popularity, Valence, Speechiness, and Instrumentalness for Songs directly from a soundtrack and songs from a "main character energy" playlist. 
+
+```{r graph1}
+oos <- get_playlist_audio_features("", "6dv5FbNRVlQelteqnNDFTe")
+
+nintys <- get_playlist_audio_features("", "0MmrdphoTkHhChZR5ympER")
+
+decades <-
+  bind_rows(
+    oos |> mutate(category = "00s"),
+    nintys |> mutate(category = "90s")
+  )
+
+decades |>
+  ggplot(aes(x = energy)) +
+  geom_histogram(binwidth = 0.1) +
+  facet_wrap(~category)
+
+movieHits <- get_playlist_audio_features("", "37i9dQZF1DXb69UWhjrXsW?si=abdd084bcd204c7a&nd=1")
+mainCharacter <- get_playlist_audio_features("", "37i9dQZF1DX4OzrY981I1W")
+
+movieVibes <-
+  bind_rows(
+    movieHits |> mutate(category = "Songs from a Soundtrack"),
+    mainCharacter |> mutate(category = "Songs from 'Main Character' Playlist")
+  )
+options(repr.plot.width =9, repr.plot.height =9)
+
+
+movieVibes |>                    # Start with awards.
+  ggplot(                     # Set up the plot.
+    aes(
+      x = valence,
+      y = track.popularity,
+      size = instrumentalness,
+      colour = speechiness
+    )
+  ) +
+  geom_point() + 
+  facet_wrap(~ category) +
+  theme_light() +             # Use a simpler theme.
+  labs(                       # Make the titles nice.
+    x = "Valence",
+    y = "Popularity",
+    colour = "Speechiness",
+    size = "Instrumentalness"
+  )+ 
+  scale_colour_gradientn(colours=rainbow(4)) +
+  geom_jitter(position = position_jitter(width = 0.3))
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
