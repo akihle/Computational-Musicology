@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(spotifyr)
 library(compmus)
+
 ```
 
 
@@ -27,9 +28,13 @@ My corpus for Computational Musicology will dive into what makes a song feel lik
 Playlist Songs vs Soundtrack Songs {data-navmenu="Visualizations"}
 =====================================  
 
+Column
+-------------
 ### Songs in a "Main Character" Playlist vs Songs from a Soundtrack
     
+
 ```{r, echo=FALSE}
+
 movieHits <- get_playlist_audio_features("", "37i9dQZF1DXb69UWhjrXsW?si=abdd084bcd204c7a&nd=1")
 mainCharacter <- get_playlist_audio_features("", "37i9dQZF1DX4OzrY981I1W")
 
@@ -60,16 +65,19 @@ movieVibes |>                    # Start with awards.
     size = "Instrumentalness"
   )+ 
   scale_colour_gradientn(colours=rainbow(4)) +
-  geom_jitter(position = position_jitter(width = 0.3))
+  geom_jitter(position = position_jitter(width = 0.3)) 
 ```
-***
 
+Column
+------------
 I first wanted to look at the major differences between songs that people think are like a movie and songs that actually are in a movie. The most imediate thing I noticed when looking at the two scatterplots side-by-side was the differences in instrumentalness. I assumed that the soundtrack songs would show more instrumentalness and would focus on the timbre of the instruments to move the plot along. However, it was the opposite. The songs that playlist developers put into their "Main character energy" playlist had much higher levels of instrumentalness and a lower level of speechiness. A possible reason for this is that the lack of lyrics allows the lostener to fill in their own storyline or internal thoughts. The kind of instrumentalness serves as a backdrop to their own internal monologue. A movie does not need this and can have higher levels of speechiness during montages to fill in the silence. It can also be seen that the songs in the playlist are overall more popular than the soundtrack songs. This was expected, since there is a higher criteria from prefessionals in order to be a part of a soundtrack and many songs are made for a specific movie rather than for sheer artistic expression. Both groupings had similar valence and I intend on looking at the comparisons and differences between the two sounds (instruments used, timing, etc.) to get to the bottom of what makes these songs so perfect for a coming-of-age/indie/main character feeling.
 
 
 Chromagram of "Heros" vs Chromagram of "Green Light" {data-navmenu="Visualizations"}
 ===================================== 
 
+Column
+----------
 ### Chromagram of "Heros" by David Bowie
 
 ```{r, echo=FALSE}
@@ -147,8 +155,9 @@ compmus_long_distance(
   theme_minimal() +
   scale_fill_viridis_c(guide = NULL)
 ```
-***
 
+Column
+--------
 I wanted to focus my chromograms on two songs that I believe create the largest sense of "Main Character Energy" for me, but for two very different reasons. I chose "Heros" by David Bowie because of its appearance in the coming of age movie, "Perks of Being a Wallflower". The scene where the main character, Charlie, lets go and screams out the sunroof while his new friends are driving through a tunnel is a scene that has stuck with me throughout years. The feeling of freedom and opportunity seemed to swell in that moment and the music wasn't just an addition to the scene, it seemed to be the leader of the scene. I got that same feeling when listening to "Green Light" by Lorde. The yells in the background are quite literally urging you to "go for it". For me, it feels like you are running towards something that you have been waiting for. Its opportunistic. I wanted to see how these two songs correlate on a chromographic level. In many ways, I see similar patterns between the two chromograms. Both start with strong energy from D (of which "Heros" continues with throughout the entire song). Both songs have very strong choruses that are shown with bursts of energy. Later in my corpus, I would like to look more into why the D chord may be so prominent in both of these songs and if that pattern is continued into other songs that give off the same "Main Character" vibe.
 
 Conclusion
