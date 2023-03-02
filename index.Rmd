@@ -101,6 +101,7 @@ Column
 
 knitr::include_graphics("DYFAM.png")
 knitr::include_graphics("POBAWF.png")
+knitr::include_graphics("FBDO.png")
 ```
 
 # Playlist Songs vs Soundtrack Songs {data-navmenu="Visualizations"}
