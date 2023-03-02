@@ -97,8 +97,10 @@ My corpus for Computational Musicology will dive into what makes a song feel lik
 
 Column
 ------
-```{r,echo=FALSE}
+```{r,echo=FALSE, out.width = '100%'}
 
+knitr::include_graphics("DYFAM.png")
+knitr::include_graphics("POBAWF.png")
 ```
 
 # Playlist Songs vs Soundtrack Songs {data-navmenu="Visualizations"}
