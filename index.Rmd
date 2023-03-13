@@ -13,6 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(spotifyr)
 library(compmus)
+library(plotly)
 
 ```
 
@@ -228,7 +229,7 @@ movieVibes <-
 options(repr.plot.width =9, repr.plot.height =9)
 
 
-movieVibes |>                    # Start with awards.
+table <- movieVibes |>                    # Start with awards.
   ggplot(                     # Set up the plot.
     aes(
       x = valence,
@@ -247,7 +248,9 @@ movieVibes |>                    # Start with awards.
     size = "Instrumentalness"
   )+ 
   scale_colour_gradientn(colours=rainbow(4)) +
-  geom_jitter(position = position_jitter(width = 0.3)) 
+  geom_jitter(position = position_jitter(width = 0.3))
+  
+ggplotly(table)
 ```
 
 ## Column
