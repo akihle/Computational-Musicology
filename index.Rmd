@@ -105,93 +105,103 @@ key_templates <-
   )
 ```
 
-
-# Chordogram of "Electric Love" by BORNS
-
-Column
-------
-```{r, echo = FALSE}
-electric_love <-
-  get_tidy_audio_analysis("2GiJYvgVaD2HtM8GqD9EgQ?si=1f63eb60b2cb4424") |>
-  compmus_align(sections, segments) |>
-  select(sections) |>
-  unnest(sections) |>
-  mutate(
-    pitches =
-      map(segments,
-        compmus_summarise, pitches,
-        method = "mean", norm = "manhattan"
-      )
-  )
-
-electric_love |> 
-  compmus_match_pitch_template(
-    key_templates,         # Change to chord_templates if descired
-    method = "manhattan",  # Try different distance metrics
-    norm = "manhattan"     # Try different norms
-  ) |>
-  ggplot(
-    aes(x = start + duration / 2, width = duration, y = name, fill = d)
-  ) +
-  geom_tile() +
-  scale_fill_viridis_c(guide = "none") +
-  theme_minimal() +
-  labs(x = "Time (s)", y = "")
-```
+# Histogram of Tempi from Playlist Songs and Soundtrack Songs
 
 Column
 -------
-I wanted to move on and look at other songs that give a similar "freedom" vibe as "Heros" and "Green Light" and see if there are any similarities between the chords used in these songs. In the Chromogram, we were able to see alot of D presence in both "Heros" and "Green Light", however I did not determine if that was the base of the chords or just a dominant one in a different chord progression. Listening to "Electric Love" there was a very apparent chord progression of A for 7 beats (as the tonic chord), to B minor for one beat (as the sub-dominant chord), and then to F# minor for 8 beats (as the dominant chord). Looking at the Chordogram of this song, the two lines around 50 seconds and 105 seconds were obviously the moments that stood out to me. In these moments, we are in the bridge of the song. This is the moment where the drums cut out and there is a sense of "calm before the storm", as we are waiting for the big burst of energy from the chorus. This is when the D chord is added into the mix very briefly. Its interesting that the three songs all have a "lead in" of sorts that are based around this D chord. 
-
-
-# Spotify Timbre Coefficients between Playlist Songs and Soundtrack Songs
-
-Column
---------
-```{r, echo = FALSE}
-soundtrack <-
+```{r, echo= FALSE}
+soundtrack_tempi <-
   get_playlist_audio_features(
-    "thesoundsofspotify",
+    "spotify",
     "37i9dQZF1DXb69UWhjrXsW?si=abdd084bcd204c7a&nd=1"
   ) |>
   slice(1:30) |>
   add_audio_analysis()
-playlist <-
+playlist_tempi <-
   get_playlist_audio_features(
-    "thesoundsofspotify",
+    "spotify",
     "37i9dQZF1DX4OzrY981I1W"
   ) |>
   slice(1:30) |>
   add_audio_analysis()
-compare <-
-  soundtrack |>
-  mutate(genre = "soundtrack") |>
-  bind_rows(playlist |> mutate(genre = "playlist"))
-```
 
-```{r, echo = FALSE}
-compare |>
+moovie <-
+  bind_rows(
+    soundtrack_tempi |> mutate(playlist1 = "Playlist with songs from a Soundtrack"),
+    playlist_tempi |> mutate(playlist1 = "Playlist with Songs that have 'Main Character Energy'"),
+  ) |>
+  mutate(playlist1 = factor(playlist1)) |>
   mutate(
+    segments =
+      map2(segments, key, compmus_c_transpose)
+  ) |>
+  mutate(
+    segments =
+      map(
+        segments,
+        mutate,
+        pitches = map(pitches, compmus_normalise, "manhattan")
+      )
+  ) |>
+  mutate(
+    segments =
+      map(
+        segments,
+        mutate,
+        pitches = map2(pitches, lag(pitches), `-`)
+      )
+  ) |>
+  mutate(
+    segments =
+      map(
+        segments,
+        mutate,
+        timbre = map2(timbre, lag(timbre), `-`)
+      )
+  ) |>
+  mutate(
+    segments =
+      map(
+        segments,
+        slice,
+        -1
+      )
+  ) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", na.rm = TRUE
+      ),
     timbre =
       map(
         segments,
-        compmus_summarise,
-        timbre,
-        method = "mean"
+        compmus_summarise, timbre,
+        method = "mean", na.rm = TRUE
       )
   ) |>
-  select(genre, timbre) |>
-  compmus_gather_timbre() |>
-  ggplot(aes(x = basis, y = value, fill = genre)) +
-  geom_violin() +
-  scale_fill_viridis_d() +
-  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Genre")
+  mutate_at(vars(pitches, timbre), map, bind_rows) |>
+  unnest(cols = c(pitches, timbre))
+
+
+```
+
+```{r, echo=FALSE}
+table1 <- moovie |>                    # Start with awards.
+  ggplot(                     # Set up the plot.
+    aes(
+      x = tempo)
+  ) +
+  geom_histogram(binwidth = 20) + 
+  facet_wrap(~ playlist1) +
+  theme_light()          # Use a simpler theme.
+  
+table1
 ```
 
 Column
--------
-To get a better idea of how I can compare the original two playlists in a more descriptive way other than numerically measured components, I looked to the Spotify Timbre Coefficients. One part I would like to point out about this violin graph is the stark similarity between the two playlists in coefficients 1, 6, and 8. In almost every coefficient, there was a general trend in the same direction between the two groupings, but these three coefficients seem to almost mirror each other. The other aspect that is of note is the higher variance of coefficient 2 in the playlist with songs that are meant to make you *feel* like your in a movie. The playlist with soundtrack songs seemed to be much less spread out. The second coefficient is focused on loudness. Does this wide variety of volume in the "Main Character" playlist correlate to the higher level of instrumentalness we saw in the side-by-side scatterplots?
-
+---
+I wanted to look at the difference in tempos between the two playlists in my corpus to find out if there is any correlation between tempo and what deems a song good for a soundtrack or "main character" song. Both histograms seemed to be skewed right with a majority of their songs on one side and then more spread out as the tempo increases. I did notice that The songs that are a part of a soundtrack had a lower peak tempo count (centered about 100 bpm) whereas the playlist songs were generally a bit faster (centered about 120 bpm). What I really want to look at for tempo is if there is a change between the variance of tempo for each song within the two groups (somehow find the variance for each song and then make a histogram looking at that measurement rather than the spread of the tempo itself). This can tell me if there is a difference in how dynamic the two groupings are tempo-wise and see if that plays a role in why these songs elicit a feeling of being in a movie.
 
 # Introduction
 
@@ -415,13 +425,98 @@ The first area of the self-similarity matrix of this song that I want to focus o
 
 The second area I want to point out is the brightest area within the timbre matrix (190 sec - 230 sec). Because it is the brightest part of the matrix, it is the "most different" from the rest of the song. I originally expected this section of the song to be the loudest when Jim Kerr goes into his "La - la la la la". This is also the point in "The Breakfast Club that John Bender (the "rebellious delinquent" of the movie) punches his fist in the air. However, the bright part was actually signaling the moment right *before* the burst of energy. This part is the quiet lead-in that builds anticipation to the big burst of music. I think this part showed to be the most different on the timbre matrix because much of the background music is cut off and you are left with long, drawn out chords. 
 
+# Chordogram of "Electric Love" by BORNS {data-navmenu="Visualizations"}
+
+Column
+------
+```{r, echo = FALSE}
+electric_love <-
+  get_tidy_audio_analysis("2GiJYvgVaD2HtM8GqD9EgQ?si=1f63eb60b2cb4424") |>
+  compmus_align(sections, segments) |>
+  select(sections) |>
+  unnest(sections) |>
+  mutate(
+    pitches =
+      map(segments,
+        compmus_summarise, pitches,
+        method = "mean", norm = "manhattan"
+      )
+  )
+
+electric_love |> 
+  compmus_match_pitch_template(
+    key_templates,         # Change to chord_templates if descired
+    method = "manhattan",  # Try different distance metrics
+    norm = "manhattan"     # Try different norms
+  ) |>
+  ggplot(
+    aes(x = start + duration / 2, width = duration, y = name, fill = d)
+  ) +
+  geom_tile() +
+  scale_fill_viridis_c(guide = "none") +
+  theme_minimal() +
+  labs(x = "Time (s)", y = "")
+```
+
+Column
+-------
+I wanted to move on and look at other songs that give a similar "freedom" vibe as "Heros" and "Green Light" and see if there are any similarities between the chords used in these songs. In the Chromogram, we were able to see alot of D presence in both "Heros" and "Green Light", however I did not determine if that was the base of the chords or just a dominant one in a different chord progression. Listening to "Electric Love" there was a very apparent chord progression of A for 7 beats (as the tonic chord), to B minor for one beat (as the sub-dominant chord), and then to F# minor for 8 beats (as the dominant chord). Looking at the Chordogram of this song, the two lines around 50 seconds and 105 seconds were obviously the moments that stood out to me. In these moments, we are in the bridge of the song. This is the moment where the drums cut out and there is a sense of "calm before the storm", as we are waiting for the big burst of energy from the chorus. This is when the D chord is added into the mix very briefly. Its interesting that the three songs all have a "lead in" of sorts that are based around this D chord. 
+
+
+# Spotify Timbre Coefficients between Playlist Songs and Soundtrack Songs {data-navmenu="Visualizations"}
+
+Column
+--------
+```{r, echo = FALSE}
+soundtrack <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "37i9dQZF1DXb69UWhjrXsW?si=abdd084bcd204c7a&nd=1"
+  ) |>
+  slice(1:30) |>
+  add_audio_analysis()
+playlist <-
+  get_playlist_audio_features(
+    "thesoundsofspotify",
+    "37i9dQZF1DX4OzrY981I1W"
+  ) |>
+  slice(1:30) |>
+  add_audio_analysis()
+compare <-
+  soundtrack |>
+  mutate(genre = "Playlist with Songs from a Soundtrack") |>
+  bind_rows(playlist |> mutate(genre = "Playlist with Songs that have 'Main Character Energy'"))
+```
+
+```{r, echo = FALSE}
+compare |>
+  mutate(
+    timbre =
+      map(
+        segments,
+        compmus_summarise,
+        timbre,
+        method = "mean"
+      )
+  ) |>
+  select(genre, timbre) |>
+  compmus_gather_timbre() |>
+  ggplot(aes(x = basis, y = value, fill = genre)) +
+  geom_violin() +
+  scale_fill_viridis_d() +
+  labs(x = "Spotify Timbre Coefficients", y = "", fill = "Genre")
+```
+
+Column
+-------
+To get a better idea of how I can compare the original two playlists in a more descriptive way other than numerically measured components, I looked to the Spotify Timbre Coefficients. One part I would like to point out about this violin graph is the stark similarity between the two playlists in coefficients 1, 6, and 8. In almost every coefficient, there was a general trend in the same direction between the two groupings, but these three coefficients seem to almost mirror each other. The other aspect that is of note is the higher variance of coefficient 2 in the playlist with songs that are meant to make you *feel* like your in a movie. The playlist with soundtrack songs seemed to be much less spread out. The second coefficient is focused on loudness. Does this wide variety of volume in the "Main Character" playlist correlate to the higher level of instrumentalness we saw in the side-by-side scatterplots?
+
 
 # Conclusion
 
 ### Chart 1
 
 ```{r}
-
 ```
 ### Chart 2
 
