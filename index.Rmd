@@ -318,7 +318,7 @@ electric_love |>
 
 I wanted to move on and look at other songs that give a similar "freedom" vibe as "Heros" and "Green Light" and see if there are any similarities between the chords used in these songs. In the Chromogram, we were able to see alot of D presence in both "Heros" and "Green Light", however I did not determine if that was the base of the chords or just a dominant one in a different chord progression. Listening to "Electric Love" there was a very apparent chord progression of A for 7 beats (as the tonic chord), to B minor for one beat (as the sub-dominant chord), and then to F# minor for 8 beats (as the dominant chord). Looking at the Chordogram of this song, the two lines around 50 seconds and 105 seconds were obviously the moments that stood out to me. In these moments, we are in the bridge of the song. This is the moment where the drums cut out and there is a sense of "calm before the storm", as we are waiting for the big burst of energy from the chorus. This is when the D chord is added into the mix very briefly. Its interesting that the three songs all have a "lead in" of sorts that are based around this D chord.
 
-### Chroma-Based and Timbre Self-Similarity Matrix
+### Chroma-Based and Timbre Self-Similarity Matrix of "Dont You (Forget About Me)"
 
 Chroma-Based (Left) and Timbre (Right) Self-Similarity Matrix of "Don't You (Forget About Me)" by Simple Minds
 
@@ -721,7 +721,8 @@ WJALW |>
   scale_fill_viridis_c() +                              
   theme_classic()
 ```
-***
+
+------------------------------------------------------------------------
 In order to back up my "feelings" about *Hell N Back* by Bakar from the Playlist dendogram, I decided to compare it to *Just A Little While* by the 502s. This song is not only one of my favorite songs that gives me the "main character" vibe, but it was also a popular song on TikTok for creating year-in-review videos where they would insert some of their favorite videos from the past year under the song and create a montage of their year. Looking at the two cepstrograms, I can see that there are two very different "main character" vibes that this playlist is catering towards. 
 
 One is the more thought-provoking "background" music that lays a tone of self-reflection (like *Hell N Back*). I could see this song playing in the background of a quiet conversation between two lead roles, or a quiet scene where the main character is reflecting on their recent actions. In the cepstrogram to the left, you can see that the loudness and brightness coefficients (1 and 3) are mostly stagnant throughout the entire song. On almost every coefficient, there is a lack of novelty shown (there is no bright bars of yellow showing a relatively high magnitude of a coefficient). 
@@ -858,13 +859,31 @@ It is exciting to see that the songs weren't divided on the genre of music they 
 
 **So... what makes a song "Main Character Energy"?**
 
+I began this corpus wanting to find what kind of "special spice" was in some of my favorite songs. Songs that gave me a sense of freedom, kind of like I was floating. Was there a coorelation to these songs that make everyone feel like they are the main character and songs that are *actually* in the movies? What kind of criteria do screenwriters and directors look for in songs when creating a film? 
 
+I first wanted to look at an overview of both playlists I would be using in my analysis. Both playlists were created by Spotify. One is a "Hits from the Movies" playlist that had a wide range of soundtrack songs from different genres and years. The second is the "my life is a movie" playlist. This contained many songs that I listen to daily. I actually had this playlist saved from early 2021 and it is a playlist that introduced me to many of my new favorite songs. I created a scatterplot of both playlists, taking a look at the speechiness, popularity, and valence variables within the Spotify API. 
+
+I then took some time to look into individual songs and find patterns within my favorite songs that I can then search for in some other songs within my corpus. I looked at "Heros" by David Bowie (as used in *Perks of Being a Wall Flower), "Green Light" by Lorde, and "Electric Love" by BORNS. All three of these songs showed a strong presence of the D pitch, especially at the beginning or during a transition leading up to a big break in the music. I predict that this pattern correlates to the feeling of anticipation for what will happen next in the song. All three songs have a moment that makes the audience (or at least myself) feel like they are on the edge of something. The artists hold you there just long enough until they can drop you into the main section of the music. 
+
+After getting a grasp of the pitches involved in some of my favorite iconic pieces, I looked at the structure of the pieces used in soundtracks. I took the example of "Don't You (Forget About Me)", as seen in the movie *The Breakfast Club* to find what *parts* of the music screenwriters and directors of these coming of age indie movies? I noticed that the iconic part of the movie (as seen in the first picture of my intro slide) is during a section that is seen as a novelty within the self-similarity matrix I composed. This one bit of excitement is among numerous sections of repetition (pretty catchy, too, if I say so myself). I think that burst of newness is what made the moment in the movie so memorable for such a large audience. The repetition helped build the suspense while certain storylines in the movie were wrapping up and then we finally see the ending shot. We then know that the movie has reached it's close. 
+
+Zooming our again, I was able to start seeing some major differences and similarities between the two playlists, building off the elementary scatterplot. I looked at the different Timbre Coefficients through a violin chart and saw that many of the coefficients had an almost identical variance and mean/median point between the two playlists. Much of the differences in variance that I saw, I believe to be related to the uneven amount of songs between the two playlists. the "my life is a movie" playlist has almost twice as many songs as the "Movie Hits" playlist, making it much harder to keep within the same range of variance. 
+
+A big moment within my corpus was being able to use dendogramms to delineate outliers and clusters based on the SpotifyAPI variables. I was able to clearly see what I had been trying to get to for 6 weeks. I was able to find groupings of music in both playlists that had two very separate themes. I was able to compare these two themes by using ceptograms of an outlier of the "my life is a movie" playlist, "Hell N Back" and a personal favorite song, "Just A Little While" to show how while some songs can be seen as a thoughtful background music for deeper thoughts, other "main character" songs are louder (based on the SpotifyAPI measurement, loudness) and seem to take over the story itself. 
+
+There are two findings that I believe are strongest through my corpus: (1) The lead in for the song's "memorable" section is what creates the feeling of freedom and relief (common to many iconic coming of age scenes), and (2) The feeling of being in a movie is actually subject to two different "scenes" of a movie. 
+
+(1) In almost every song I analyzed in this corpus, there was a strong focus on the pre-chorus as the section with the most novelty within the song. Along with that, the movies that played with these songs in the soundtrack highlighted these pre-choruses as a buildup to a big release of pressure. They are moments of awe where the audience feels a sense of joy. For the everyday listener, songs like the ones in my corpus give a sense of "romanticizing daily life" through drawn out tones and exciting changes in the music. The D-pitch was very present in three of the songs that I analyzed through the chromagram and chordagram. I think this chord would be described as a "departure" chord due to its unique placement in the music (right before a large opening in the music).
+
+(2) The dendograms from our final week of class created a big "AHA" moment for my corpus. With the usage of single distance and average distance, I could see the major outliers of each playlist as well as the major groupings within the two playlists. Looking at the groupings made through the SpotifyAPI identifiers, I realized I wasn't looking for a single feeling, but two. There are the songs that force you to think about your own life (the slower tempo songs with a lower amount of speachiness), and the songs that make you take a look at the world around you with movie-like awe (higher tempo songs with more novelty and loudness). The former is seen as a scene in a movie that focuses on the main character only, giving in to the "main character energy" that many people feel when listening to these songs. The later is meant as a fast-paced montage scene where ones life seems to imitate a "highlight reel".
+
+Making these two distinctions, I was able to identify parts of my favorite songs that gave me that "main character energy" for myself. Prior to this research, I wouldn't be able to describe to people the feelings I get with certain songs. I would always scrunch my fingers together and say "it just has... something". Being able to break down music into multiple ways, I can pinpoint sections or aspects of music that elicit that finger-scrunching emotion and I can better identify other songs that can be added to my repertoire. 
 
 ## Column
 
 ```{r,echo=FALSE, out.width = '90%'}
 
-knitr::include_graphics("DYFAM.png")
-knitr::include_graphics("POBAWF.png")
+knitr::include_graphics("bttf.png")
+knitr::include_graphics("tg.png")
 
 ```
